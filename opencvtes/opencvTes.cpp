@@ -8,8 +8,8 @@
 #define MAX_H_BLUE 300
 using namespace std;
 using namespace cv;
-void CameraCalibrate(Size, string, Mat&, Mat&, Mat&, Mat&);//Ïà»ú±ê¶¨
-void DistanceSolve(Mat, Mat, Mat, Mat&, Mat&);//²â¾à
+void CameraCalibrate(Size, string, Mat&, Mat&, Mat&, Mat&);
+void DistanceSolve(Mat, Mat, Mat, Mat&, Mat&);
 int main()
 {
 
@@ -29,11 +29,11 @@ int main()
 
 void CameraCalibrate(Size patsize, string path, Mat& a, Mat& b, Mat& c, Mat& d)
 {
-	vector<vector<Point3f> > objpoints;    // ÊÀ½ç×ø±êÏµÖĞ½ÇµãµÄÈıÎ¬×ø±ê
-	vector<vector<Point2f> > imgpoints;		// Í¼ÏñÏñËØ×ø±êÏµÖĞ½ÇµãµÄ¶şÎ¬×ø±ê
-	vector<Point3f> objp;   // Îª½Çµã¶¨ÒåÆäÔÚÊÀ½ç×ø±êÏµÖĞµÄ×ø±ê
-	vector<String> images;  // ÌáÈ¡´æ´¢ÔÚ¸ø¶¨Ä¿Â¼ÖĞµÄµ¥¸öÍ¼ÏñµÄÂ·¾¶//ÓÉ¸÷¸öÍ¼ÏñµÄÂ·¾¶×é³ÉµÄStringÊı×é
-	vector<Point2f> corner_pts;// ½ÇµãÔÚÍ¼ÏñÏñËØ×ø±êÏµÖĞµÄ¶şÎ¬Î»ÖÃ
+	vector<vector<Point3f> > objpoints;    // ä¸–ç•Œåæ ‡ç³»ä¸­è§’ç‚¹çš„ä¸‰ç»´åæ ‡
+	vector<vector<Point2f> > imgpoints;		// å›¾åƒåƒç´ åæ ‡ç³»ä¸­è§’ç‚¹çš„äºŒç»´åæ ‡
+	vector<Point3f> objp;   // ä¸ºè§’ç‚¹å®šä¹‰å…¶åœ¨ä¸–ç•Œåæ ‡ç³»ä¸­çš„åæ ‡
+	vector<String> images;  // æå–å­˜å‚¨åœ¨ç»™å®šç›®å½•ä¸­çš„å•ä¸ªå›¾åƒçš„è·¯å¾„//ç”±å„ä¸ªå›¾åƒçš„è·¯å¾„ç»„æˆçš„Stringæ•°ç»„
+	vector<Point2f> corner_pts;// è§’ç‚¹åœ¨å›¾åƒåƒç´ åæ ‡ç³»ä¸­çš„äºŒç»´ä½ç½®
 	Mat frame, gray;
 	Mat cameraMatrix, distCoeffs, R, T;
 	bool success;
@@ -55,7 +55,7 @@ void CameraCalibrate(Size patsize, string path, Mat& a, Mat& b, Mat& c, Mat& d)
 		if (i == 10)
 		{
 			int b = 1;
-		}// Ñ­»·¶ÁÈ¡Í¼Ïñ
+		}// å¾ªç¯è¯»å–å›¾åƒ
 		cout << "the current image is " << i << "th" << endl;
 		cvtColor(frame, gray, COLOR_BGR2GRAY);
 		success = findChessboardCorners(gray, patsize, corner_pts, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FAST_CHECK | CALIB_CB_NORMALIZE_IMAGE);
@@ -63,11 +63,11 @@ void CameraCalibrate(Size patsize, string path, Mat& a, Mat& b, Mat& c, Mat& d)
 		cout << success << endl;
 		if (success)
 		{
-			TermCriteria criteria(TermCriteria::EPS | TermCriteria::Type::MAX_ITER, 30, 0.001);// ÊµÀı»¯TermCriteriaÀà¶ÔÏócriteria
-			cornerSubPix(gray, corner_pts, Size(3, 3), Size(-1, -1), criteria);	// Îª¸ø¶¨µÄ¶şÎ¬µãÏ¸»¯ÏñËØ×ø±ê				
-			drawChessboardCorners(frame, patsize, corner_pts, success);// ÔÚÆåÅÌÉÏÏÔÊ¾¼ì²âµ½µÄ½Çµã
-			objpoints.push_back(objp);//ÓÉÓÚÂ·¾¶ÖĞÓĞ¶à¸±Í¼Ïñ£¬¾Í¶ÑµşÁË¶à²ã¸ø½Çµã¶¨ÒåºÃµÄÈıÎ¬ÊÀ½ç×ø±êÏµ
-			imgpoints.push_back(corner_pts);//ÓÉÓÚÂ·¾¶ÖĞÓĞ¶à¸±Í¼Ïñ£¬¾Í¶ÑµşÁË¶à²ã½Çµã¶ÔÓ¦µÄÍ¼ÏñÏñËØ×ø±ê
+			TermCriteria criteria(TermCriteria::EPS | TermCriteria::Type::MAX_ITER, 30, 0.001);// å®ä¾‹åŒ–TermCriteriaç±»å¯¹è±¡criteria
+			cornerSubPix(gray, corner_pts, Size(3, 3), Size(-1, -1), criteria);	// ä¸ºç»™å®šçš„äºŒç»´ç‚¹ç»†åŒ–åƒç´ åæ ‡				
+			drawChessboardCorners(frame, patsize, corner_pts, success);// åœ¨æ£‹ç›˜ä¸Šæ˜¾ç¤ºæ£€æµ‹åˆ°çš„è§’ç‚¹
+			objpoints.push_back(objp);//ç”±äºè·¯å¾„ä¸­æœ‰å¤šå‰¯å›¾åƒï¼Œå°±å †å äº†å¤šå±‚ç»™è§’ç‚¹å®šä¹‰å¥½çš„ä¸‰ç»´ä¸–ç•Œåæ ‡ç³»
+			imgpoints.push_back(corner_pts);//ç”±äºè·¯å¾„ä¸­æœ‰å¤šå‰¯å›¾åƒï¼Œå°±å †å äº†å¤šå±‚è§’ç‚¹å¯¹åº”çš„å›¾åƒåƒç´ åæ ‡
 		}
 		imshow("Image", frame);
 		waitKey(0);
@@ -76,9 +76,9 @@ void CameraCalibrate(Size patsize, string path, Mat& a, Mat& b, Mat& c, Mat& d)
 	calibrateCamera(objpoints, imgpoints, Size(gray.rows, gray.cols), cameraMatrix, distCoeffs, R, T);
 	a = cameraMatrix; b = distCoeffs; c = R; d = T;
 	cout << "cameraMatrix : " << cameraMatrix << endl;
-	cout << "distCoeffs : " << distCoeffs << endl; //Í¸¾µ»û±äÏµÊı
+	cout << "distCoeffs : " << distCoeffs << endl; //é€é•œç•¸å˜ç³»æ•°
 	cout << "Rotation vector : " << R << endl;
-	cout << "Translation vector : " << T << endl;// Í¨¹ı´«µİÒÑÖª3Dµã£¨objpoints£©µÄÖµºÍ¼ì²âµ½µÄ½Çµã£¨imgpoints£©µÄÏàÓ¦ÏñËØ×ø±êÀ´Ö´ĞĞÏà»úĞ£×¼
+	cout << "Translation vector : " << T << endl;// é€šè¿‡ä¼ é€’å·²çŸ¥3Dç‚¹ï¼ˆobjpointsï¼‰çš„å€¼å’Œæ£€æµ‹åˆ°çš„è§’ç‚¹ï¼ˆimgpointsï¼‰çš„ç›¸åº”åƒç´ åæ ‡æ¥æ‰§è¡Œç›¸æœºæ ¡å‡†
 
 }
 void DistanceSolve(Mat frame, Mat cameraMatrix, Mat distCoeffs, Mat& R, Mat& T)
@@ -91,16 +91,16 @@ void DistanceSolve(Mat frame, Mat cameraMatrix, Mat distCoeffs, Mat& R, Mat& T)
 	vector<Vec4i> hireachy;
 	findContours(edgesBlur, contours, hireachy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-	vector<vector<Point> > balls;//ÓĞĞ§ÂÖÀª¼¯ºÏ
-	vector<RotatedRect> ballsBox;//ÓĞĞ§±ß¿ò¼¯ºÏ
+	vector<vector<Point> > balls;//æœ‰æ•ˆè½®å»“é›†åˆ
+	vector<RotatedRect> ballsBox;//æœ‰æ•ˆè¾¹æ¡†é›†åˆ
 	vector<vector<Point2f>> box_pointsSet;
-	vector<Point2f>vertices(4);//¶¥µã
+	vector<Point2f>vertices(4);//é¡¶ç‚¹
 
 	for (size_t i = 0; i < contours.size(); i++)
 	{
 		RotatedRect bBox;
 
-		bBox = minAreaRect(contours[i]);//¶ÔÂÖÀª»æÖÆ±ß¿òbBox
+		bBox = minAreaRect(contours[i]);//å¯¹è½®å»“ç»˜åˆ¶è¾¹æ¡†bBox
 		float ratio = (float)bBox.size.width / (float)bBox.size.height;
 		if (ratio > 1.0f)
 			ratio = 1.0f / ratio;
@@ -111,10 +111,10 @@ void DistanceSolve(Mat frame, Mat cameraMatrix, Mat distCoeffs, Mat& R, Mat& T)
 			bBox.points(vertices.data());
 			box_pointsSet.push_back(vertices);
 		}
-	}//ÎÊÌâ1£ºfindcontoursÈç¹ûÖ»ÕÒµ½ÁË×îÍâ²ãÂÖÀª£¬ÕâÀï¾Í»á±£´æ£¨ÄÚ´æ£©
-	 //Ó¦µ±¼ì²éÓĞÎŞÓĞĞ§¼ì²âµ½ÂÖÀª
+	}//é—®é¢˜1ï¼šfindcontourså¦‚æœåªæ‰¾åˆ°äº†æœ€å¤–å±‚è½®å»“ï¼Œè¿™é‡Œå°±ä¼šä¿å­˜ï¼ˆå†…å­˜ï¼‰
+	 //åº”å½“æ£€æŸ¥æœ‰æ— æœ‰æ•ˆæ£€æµ‹åˆ°è½®å»“
 
-	cout << "Balls found:" << ballsBox.size() << endl;//Êä³öÂú×ãÌõ¼şµÄÄ¿±êÎï
+	cout << "Balls found:" << ballsBox.size() << endl;//è¾“å‡ºæ»¡è¶³æ¡ä»¶çš„ç›®æ ‡ç‰©
 
 	for (size_t i = 0; i < balls.size(); i++)
 	{
@@ -125,13 +125,13 @@ void DistanceSolve(Mat frame, Mat cameraMatrix, Mat distCoeffs, Mat& R, Mat& T)
 			//for (int k = 0; k < 4; j++)
 			//{
 				//line(frame, box_pointsSet[j][k], box_pointsSet[j][(k + 1) % 4], Scalar(0, 0, 255), 3);
-			//}  ÎÊÌâ2£ºlineÕâÀïÊı×é±¨´í£¬»¹²»ÊÇÌ«Çå³şÔ­Òò
+			//}  é—®é¢˜2ï¼šlineè¿™é‡Œæ•°ç»„æŠ¥é”™ï¼Œè¿˜ä¸æ˜¯å¤ªæ¸…æ¥šåŸå› 
 			//rectangle(frame, ballsBox[i], CV_RGB(0, 255, 0), 2);
 
 			//Point center;
 			//center.x = ballsBox[i].size.x + ballsBox[i].width / 2;
 			//center.y = ballsBox[i].y + ballsBox[i].height / 2;
-			circle(frame, ballsBox[i].center, 2, CV_RGB(20, 150, 20), -1);//¶ÔÉ¸Ñ¡ºóµÄÄ¿±êÎï»æÖÆÔ²
+			circle(frame, ballsBox[i].center, 2, CV_RGB(20, 150, 20), -1);//å¯¹ç­›é€‰åçš„ç›®æ ‡ç‰©ç»˜åˆ¶åœ†
 
 			stringstream sstr;
 			sstr << "(" << ballsBox[i].center << ")";
@@ -151,7 +151,7 @@ void DistanceSolve(Mat frame, Mat cameraMatrix, Mat distCoeffs, Mat& R, Mat& T)
 		P = (rotM.t()) * T;
 
 		stringstream sstr;
-		sstr << "Distance:" << P.at<double>(2, 0);//ÎÊÌâ3£º×¢ÒâÕâÀïµÄP£»Ö»ÓĞÒ»ÁĞ
+		sstr << "Distance:" << P.at<double>(2, 0);//é—®é¢˜3ï¼šæ³¨æ„è¿™é‡Œçš„Pï¼›åªæœ‰ä¸€åˆ—
 		putText(frame, sstr.str(), Point(ballsBox[i].center), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(0, 0, 255), 2);
 
 	}
